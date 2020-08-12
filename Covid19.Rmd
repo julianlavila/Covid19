@@ -1,0 +1,236 @@
+---
+title: "Covid19"
+author: "Julian Avila-Jimenez"
+date: "12/8/2020"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = F)
+```
+
+### Análisis de casos de Covid19 en Boyacá.
+
+Descarga los datos de de [Covid19](https://www.datos.gov.co/Salud-y-Protecci-n-Social/Casos-positivos-de-COVID-19-en-Colombia/gt2j-8ykr/data) de la pagina del Instituto Nacional de Salud 
+
+```{r}
+library(tidyverse)
+library(lubridate)
+library(knitr)
+library(kableExtra)
+library(ggspatial)
+library(ggplot2)
+Data<- read_csv("Casos_positivos_de_COVID-19_en_Colombia.csv")
+```
+
+```{r}
+Data <- Data[,1:9]
+names(Data) <- c('id', 'fecha', 'code_mpio', 'ciudad', 'dpto',
+                 'atencion', 'edad', 'sexo', 'tipo')
+
+head(Data)
+
+Boy<-Data %>% 
+  filter(dpto == "Boyacá") %>% 
+  mutate(ciudad, as.character(ciudad)) 
+
+Boy %>% 
+  kable(align = "c") %>% 
+  kable_styling() %>%
+  scroll_box(width = "100%", height = "400px")
+```
+
+
+### Municipios con mayor número de casos del departamento.
+```{r}
+#summary
+smm <- Boy %>% 
+  group_by(code_mpio,ciudad) %>% 
+  dplyr::summarise(count = n()) %>% 
+  ungroup() %>% 
+  arrange(desc(count))
+
+top_10 <- smm %>% 
+  top_n(wt = count, n = 10) %>% 
+  arrange(desc(count)) %>% 
+  mutate(ciudad = factor(ciudad, levels = ciudad))
+
+ggplot(data = top_10, aes(x = ciudad, y = count)) +
+  geom_col(fill="steelblue") +
+  geom_text(aes(label=count,vjust=-0.25))+
+  labs(x = '',
+       y = '',
+       caption = 'Fuente: INS - 12 Agosto de 2020\nAutor: Julian Avila') +
+  scale_x_discrete(guide = guide_axis(n.dodge=2))+
+  theme(panel.grid.minor = element_blank(),
+        panel.grid.major = element_blank(),
+        text = element_text(size = 14),
+        plot.title = element_text(hjust = 0.5, size = 20)) +
+  ggtitle(label = 'Top 10 municipios con mayor numero de casos \n de COVID en Boyacá')+
+theme_bw()
+
+```
+
+
+```{r}
+brks <- cartography::getBreaks(smm$count, method = 'geom', nclass = 5) %>% 
+  round(., 0)
+brks <- c(0.5, brks[2:6])
+smm <- smm %>% mutate(category = cut(count, brks)) 
+int<-cut(smm$count, breaks=5)
+lvls <- levels(int)
+lbl <- data.frame(brk = unique(as.character(smm$category)),
+                  interval = lvls)
+smm <- inner_join(smm, lbl, by = c('category' = 'brk'))
+smm <- smm %>% 
+  mutate(interval2 = factor(interval))
+smm_int <- smm %>% 
+  dplyr::select(ciudad, interval2)
+```
+
+### Comportamiento de la curva de casos diarios en Boyacá.
+```{r}
+tbl_dte <- Boy %>% 
+  group_by(fecha) %>% 
+  dplyr::summarise(count = n()) %>% 
+  ungroup %>% 
+  mutate(fecha2= ymd(fecha),
+         acumulate = cumsum(count)) %>% 
+  slice_head(n=109)
+
+ggplot(data = tbl_dte,aes(x = fecha, y = count))+
+  geom_line(color="white") +
+  geom_smooth(color="#FF3300")+
+  labs(x = '', 
+       y = '', 
+       caption = 'Fuente: INS - 12 Agosto de 2020\nAutor: Julián Avila',
+       title="Reporte de casos diarios en Boyacá\ncorte 2020-07-31",
+       subtitle = "-la curva que se debe aplanar-")+
+  theme(axis.text.x = element_text(angle = 90, hjust = 1),
+        panel.background = element_rect(fill="steelblue"),
+        line = element_line(colour = "black", size = 0.5, 
+                            linetype = 1, lineend = "butt"),
+        rect = element_rect(fill = "white", colour = "black",
+                            size = 0.5, linetype = 1),
+        plot.subtitle=element_text(size=10, face="italic"),
+        plot.caption =element_text(size=7))
+```
+
+### Comportamiento de la curva de casos diarios en Tunja.
+```{r}
+Tunja<- Boy %>% 
+  filter(ciudad=="Tunja")
+
+tbl_dte.t <- Tunja %>% 
+  group_by(fecha) %>% 
+  dplyr::summarise(count = n()) %>% 
+  ungroup %>% 
+  mutate(fecha2= ymd(fecha),
+         acumulate = cumsum(count)) %>% 
+  slice_head(n=79)
+
+ggplot(data = tbl_dte.t,aes(x = fecha, y = count))+
+  geom_line(color="white") +
+  geom_smooth(color="#FF3300")+
+  labs(x = '', 
+       y = '', 
+       caption = 'Fuente: INS - 12 Agosto de 2020\nAutor: Julián Avila',
+       title="Reporte de casos diarios en Tunja \ncorte 2020-07-31",
+       subtitle = "-la curva que se debe aplanar-")+
+  theme(axis.text.x = element_text(angle = 90, hjust = 1),
+        panel.background = element_rect(fill="steelblue"),
+        line = element_line(colour = "black", size = 0.5, 
+                            linetype = 1, lineend = "butt"),
+        rect = element_rect(fill = "white", colour = "black",
+                            size = 0.5, linetype = 1),
+        plot.subtitle=element_text(size=10, face="italic"),
+        plot.caption =element_text(size=7))
+
+```
+
+
+## Distribución de los casos en el departamento.
+```{r, fig.width=8,fig.height=8,dpi=300}
+library(sf)
+library(rnaturalearth)
+library(raster)
+mps <- st_read("./shp/mpios_geo_ok.shp")
+# To make the map
+world <- ne_countries(scale = "medium", returnclass = "sf")
+
+mps <- mps %>%
+  mutate(ID_ESPACIA = as.character(ID_ESPACIA) %>%
+                        as.numeric) %>% 
+  filter(NOMBRE_DPT=="BOYACÁ")
+smm <- smm %>% 
+  mutate(code_mpio = as.character(code_mpio) %>%
+                        as.numeric)
+mps_smm <- inner_join(mps, smm, by = c('ID_ESPACIA' = 'code_mpio'))
+trb <- anti_join(smm, mps_smm, by = c('code_mpio' = 'ID_ESPACIA'))
+
+smm_int <- smm %>% 
+  dplyr::select(code_mpio, ciudad, interval2)
+mps_smm <- inner_join(mps_smm, smm_int, by = c('ID_ESPACIA' = 'code_mpio'))
+
+# To get the shapefile of the all departments
+mun <- mps %>% 
+  group_by(NOM_MUNICI) %>% 
+  dplyr::summarise(count = n()) %>% 
+  ungroup()
+
+
+ggplot() +
+  geom_sf(data = mps_smm, aes(fill = interval, colour = interval)) +
+  geom_sf(data = mun, fill = NA) +
+  scale_fill_manual(name = 'Cantidad casos',
+                    values = c('#ffffb2','#fecc5c','#fd8d3c',
+                               '#f03b20','#bd0026'),
+                    na.value = 'white',
+                    labels = c("0-107","108-214","215-320",
+                                                 "321-427","428-534")) +
+  scale_colour_manual(name = '', 
+                      values = c('#ffffb2', '#fecc5c', '#fd8d3c',
+                                 '#f03b20', '#bd0026'), 
+                      na.value = 'white',
+                      guide = FALSE) +
+  coord_sf(xlim = c(-75,-71.5), 
+           ylim = c(4.5,7.5)) +
+  ggtitle(label = 'Casos de COVID-19 por municipio en Boyacá') +
+  annotation_scale(location = "br", width_hint = 0.1,line_width = 0.5) +
+  annotation_north_arrow(location = "tr", which_north = "true", 
+                         pad_x = unit(0.5, "cm"), 
+                         pad_y = unit(0.5, "cm"),
+                         height = unit(1, "cm"),
+                         width = unit(1, "cm"), # 0.2 # 0.3
+                         style = north_arrow_fancy_orienteering) +
+  theme_bw()+ 
+  theme(plot.title = element_text(hjust = 0, size = 15, face = "bold"),
+        panel.grid.major = element_blank(),
+        text = element_text(size = 9),
+        panel.grid.minor = element_blank(),
+        legend.justification = c(0,0),
+        legend.position = c(0.005, 0.005),
+        legend.key.size = unit(0.4, "cm"),
+        legend.background = element_rect(fill = alpha('white', 1),
+                                         colour = alpha('white', 0.4))) +
+  labs(x = 'Longitud',
+       y = 'Latitud',
+       caption = "Fuente: INS - 12 Agosto de 2020\nAutor: Julian Avila")
+
+```
+
+
+Elaborado en <br/>
+
+```{r fig.width=0.5, fig.height=0.5,echo=FALSE}
+library(png)
+library(grid)
+img <- readPNG("C:/Users/julia/Documents/HEX/rmarkdown.png")
+ grid.raster(img,x = unit(0.5, "npc"), y = unit(0.5, "npc"))
+```
+
+[RMarkdown](https://rmarkdown.rstudio.com/) 
+
+Ultima vez actualizado en "`r format(Sys.time(), '%d %B, %Y')`".
