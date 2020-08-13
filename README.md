@@ -8,7 +8,7 @@ de la pagina del Instituto Nacional de Salud
 
 ### Municipios con mayor número de casos del departamento.
 
-![](Reporte_files/figure-markdown_strict/unnamed-chunk-4-1.png)
+![](Reporte_files/figure-markdown_strict/unnamed-chunk-3-1.png)
 
 El número de casos por municipio esta directamente relacionado con la
 población por municipio.
@@ -17,7 +17,7 @@ población por municipio.
 
 ### Comportamiento de la curva de casos diarios en Boyacá.
 
-![](Reporte_files/figure-markdown_strict/unnamed-chunk-6-1.png)
+![](Reporte_files/figure-markdown_strict/unnamed-chunk-5-1.png)
 
 La curva muestra que aun nos encontramos en la fase de crecimiento.
 
@@ -25,7 +25,7 @@ La curva muestra que aun nos encontramos en la fase de crecimiento.
 
 ### Comportamiento de la curva de casos diarios en Tunja.
 
-![](Reporte_files/figure-markdown_strict/unnamed-chunk-7-1.png)
+![](Reporte_files/figure-markdown_strict/unnamed-chunk-6-1.png)
 
 La curva muestra que aun nos encontramos en la fase de crecimiento.
 
@@ -33,7 +33,7 @@ La curva muestra que aun nos encontramos en la fase de crecimiento.
 
 ### Comportamiento de la curva de casos diarios en Duitama.
 
-![](Reporte_files/figure-markdown_strict/unnamed-chunk-8-1.png)
+![](Reporte_files/figure-markdown_strict/unnamed-chunk-7-1.png)
 
 La curva muestra que empieza a aplanarse, este comportamiento esta
 relacionado por tres días de muy bajos reportes.
@@ -42,7 +42,7 @@ relacionado por tres días de muy bajos reportes.
 
 ### Comportamiento de la curva de casos diarios en Sogamoso.
 
-![](Reporte_files/figure-markdown_strict/unnamed-chunk-9-1.png)
+![](Reporte_files/figure-markdown_strict/unnamed-chunk-8-1.png)
 
 La curva muestra que aun nos encontramos en la fase de crecimiento.
 
@@ -50,7 +50,7 @@ La curva muestra que aun nos encontramos en la fase de crecimiento.
 
 ### Comportamiento de la curva de casos diarios en Chiquinquirá.
 
-![](Reporte_files/figure-markdown_strict/unnamed-chunk-10-1.png)
+![](Reporte_files/figure-markdown_strict/unnamed-chunk-9-1.png)
 
 La curva muestra que aun nos encontramos en la fase de crecimiento.
 
@@ -59,13 +59,13 @@ La curva muestra que aun nos encontramos en la fase de crecimiento.
 Distribución de los casos en el departamento.
 ---------------------------------------------
 
-![](Reporte_files/figure-markdown_strict/unnamed-chunk-11-1.png)
+![](Reporte_files/figure-markdown_strict/unnamed-chunk-10-1.png)
 
 ------------------------------------------------------------------------
 
 Elaborado en <br/>
 
-![](Reporte_files/figure-markdown_strict/unnamed-chunk-12-1.png)
+![](Reporte_files/figure-markdown_strict/unnamed-chunk-11-1.png)
 
 [RMarkdown](https://rmarkdown.rstudio.com/)
 
