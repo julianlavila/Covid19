@@ -334,14 +334,14 @@ ggplot() +
                               colour = as.factor(interval))) +
   geom_sf(data = mun, fill = NA) +
   scale_fill_manual(name = 'Cantidad casos',
-                    values = c('#bd0026','#f03b20','#fd8d3c',
-                                 '#fecc5c','#ffffb2'),
+                    values = c('#a50f15','#de2d26','#fb6a4a',
+                                 '#fcae91','#fee5d9'),
                     na.value = 'white',
-                    labels = c("0-107","108-214","215-320",
-                               "321-427","428-534")) +
+                    labels = c("428-534","321-427","215-320",
+                               "108-214","0-107")) +
   scale_colour_manual(name = '', 
-                      values = c('#bd0026','#f03b20','#fd8d3c',
-                                 '#fecc5c','#ffffb2'), 
+                      values = c('#a50f15','#de2d26','#fb6a4a',
+                                 '#fcae91','#fee5d9'), 
                       na.value = 'white',
                       guide = FALSE) +
   coord_sf(xlim = c(-75,-71.5), 
