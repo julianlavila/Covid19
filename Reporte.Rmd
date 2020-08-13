@@ -173,6 +173,128 @@ La curva muestra que aun nos encontramos en la fase de crecimiento.
 
 </br>
 
+
+\newpage
+
+\pagebreak
+
+### Comportamiento de la curva de casos diarios en Duitama.
+```{r}
+Duitama<- Boy %>% 
+  filter(ciudad=="Duitama")
+
+tbl_dte.d <- Duitama %>% 
+  group_by(fecha) %>% 
+  dplyr::summarise(count = n()) %>% 
+  ungroup %>% 
+  mutate(fecha2= ymd(fecha),
+         acumulate = cumsum(count)) %>% 
+  slice_head(n=61)
+
+ggplot(data = tbl_dte.d,aes(x = fecha, y = count))+
+  geom_line(color="white") +
+  geom_smooth(color="#FF3300")+
+  labs(x = '', 
+       y = '', 
+       caption = 'Fuente: INS - 12 Agosto de 2020\nAutor: Julián Avila',
+       title="Reporte de casos diarios en Duitama \ncorte 2020-07-31",
+       subtitle = "-la curva que se debe aplanar-")+
+  theme(axis.text.x = element_text(angle = 90, hjust = 1),
+        panel.background = element_rect(fill="steelblue"),
+        line = element_line(colour = "black", size = 0.5, 
+                            linetype = 1, lineend = "butt"),
+        rect = element_rect(fill = "white", colour = "black",
+                            size = 0.5, linetype = 1),
+        plot.subtitle=element_text(size=10, face="italic"),
+        plot.caption =element_text(size=7))
+
+```
+
+La curva muestra que empieza a aplanarse, este comportamiento esta relacionado por tres días de muy bajos reportes.
+
+</br>
+
+
+\newpage
+
+\pagebreak
+
+### Comportamiento de la curva de casos diarios en Sogamoso.
+```{r}
+Sogamoso<- Boy %>% 
+  filter(ciudad=="Sogamoso")
+
+tbl_dte.s <- Sogamoso %>% 
+  group_by(fecha) %>% 
+  dplyr::summarise(count = n()) %>% 
+  ungroup %>% 
+  mutate(fecha2= ymd(fecha),
+         acumulate = cumsum(count)) %>%
+  slice_head(n=55)
+
+ggplot(data = tbl_dte.s,aes(x = fecha, y = count))+
+  geom_line(color="white") +
+  geom_smooth(color="#FF3300")+
+  labs(x = '', 
+       y = '', 
+       caption = 'Fuente: INS - 12 Agosto de 2020\nAutor: Julián Avila',
+       title="Reporte de casos diarios en Sogamoso \ncorte 2020-07-31",
+       subtitle = "-la curva que se debe aplanar-")+
+  theme(axis.text.x = element_text(angle = 90, hjust = 1),
+        panel.background = element_rect(fill="steelblue"),
+        line = element_line(colour = "black", size = 0.5, 
+                            linetype = 1, lineend = "butt"),
+        rect = element_rect(fill = "white", colour = "black",
+                            size = 0.5, linetype = 1),
+        plot.subtitle=element_text(size=10, face="italic"),
+        plot.caption =element_text(size=7))
+
+```
+
+La curva muestra que aun nos encontramos en la fase de crecimiento.
+
+</br>
+
+
+\newpage
+
+\pagebreak
+
+### Comportamiento de la curva de casos diarios en Chiquinquirá.
+```{r}
+Chiquinquirá<- Boy %>% 
+  filter(ciudad=="Chiquinquirá")
+
+tbl_dte.c <- Chiquinquirá %>% 
+  group_by(fecha) %>% 
+  dplyr::summarise(count = n()) %>% 
+  ungroup %>% 
+  mutate(fecha2= ymd(fecha),
+         acumulate = cumsum(count)) %>% 
+  slice_head(n=46)
+
+ggplot(data = tbl_dte.c,aes(x = fecha, y = count))+
+  geom_line(color="white") +
+  geom_smooth(color="#FF3300")+
+  labs(x = '', 
+       y = '', 
+       caption = 'Fuente: INS - 12 Agosto de 2020\nAutor: Julián Avila',
+       title="Reporte de casos diarios en Chiquinquirá\ncorte 2020-07-31",
+       subtitle = "-la curva que se debe aplanar-")+
+  theme(axis.text.x = element_text(angle = 90, hjust = 1),
+        panel.background = element_rect(fill="steelblue"),
+        line = element_line(colour = "black", size = 0.5, 
+                            linetype = 1, lineend = "butt"),
+        rect = element_rect(fill = "white", colour = "black",
+                            size = 0.5, linetype = 1),
+        plot.subtitle=element_text(size=10, face="italic"),
+        plot.caption =element_text(size=7))
+
+```
+
+La curva muestra que aun nos encontramos en la fase de crecimiento.
+
+</br>
 \newpage
 
 \pagebreak
