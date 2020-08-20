@@ -3,7 +3,6 @@ title: "Covid19 Boyacá"
 author: "Julian Avila-Jimenez"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: html_document
-always_allow_html: true
 editor_options: 
   chunk_output_type: console
 
